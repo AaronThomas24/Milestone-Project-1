@@ -1,1 +1,1 @@
-For my milestone project I will be doing a mock of the classic arcade game Pacman. Pacman has been popular for decades now and is a big part of my childhood. I am interested in making my own version of a classic.
+For my milestone project I will be doing a mock of the classic arcade game Pacman. Pacman has been a popular game for decades and is a big part of my childhood. I am interested in making my own version of a classic.
