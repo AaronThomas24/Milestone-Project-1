@@ -3,6 +3,8 @@
     height: 600px;
     background-color: gray;
     position: relative;
+    font-size: 100px;
+    text-align: center;
 }
 
 .jumper {
