@@ -1,12 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
   const map = document.querySelector(".map");
   const jumper = document.createElement("div");
+  let isGameOver = false;
+  let speed = 3;
+  let platformCount = 5;
+  let platforms = [];
+  let score = 0;
   let jumperLeftSpace = 50;
   let startingPoint = 150;
   let jumperBottomSpace = startingPoint;
-  let isGameOver = false;
-  let platformCount = 5;
-  let platforms = [];
+  const gravity = 0.9;
   let upTimerId;
   let downTimerId;
   let isJumping = true;
@@ -14,15 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let isGoingRight = false;
   let leftTimerId;
   let rightTimerId;
-  let score = 0;
-
-  function createJumper() {
-    map.appendChild(jumper);
-    jumper.classList.add("jumper");
-    jumperLeftSpace = platforms[0].left;
-    jumper.style.left = jumperLeftSpace + "px";
-    jumper.style.bottom = jumperBottomSpace + "px";
-  }
 
   class Platform {
     constructor(newPlatformBottom) {
@@ -68,21 +62,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function jump() {
-    clearInterval(downTimerId);
-    isJumping = true;
-    upTimerId = setInterval(function () {
-      jumperBottomSpace += 20;
-      jumper.style.bottom = jumperBottomSpace + "px";
-      if (jumperBottomSpace > startingPoint + 200) {
-        fall();
-      }
-    }, 30);
+  function createJumper() {
+    map.appendChild(jumper);
+    jumper.classList.add("jumper");
+    jumperLeftSpace = platforms[0].left;
+    jumper.style.left = jumperLeftSpace + "px";
+    jumper.style.bottom = jumperBottomSpace + "px";
   }
 
   function fall() {
-    clearInterval(upTimerId);
     isJumping = false;
+    clearInterval(upTimerId);
     downTimerId = setInterval(function () {
       jumperBottomSpace -= 5;
       jumper.style.bottom = jumperBottomSpace + "px";
@@ -100,9 +90,75 @@ document.addEventListener("DOMContentLoaded", () => {
           console.log("landed");
           startingPoint = jumperBottomSpace;
           jump();
+          console.log("start", startPoint);
+          isJumping = true;
         }
       });
+    }, 20);
+  }
+
+  function jump() {
+    clearInterval(downTimerId);
+    isJumping = true;
+    upTimerId = setInterval(function () {
+      console.log(startingPoint);
+      console.log("1", jumperBottomSpace);
+      jumperBottomSpace += 20;
+      jumper.style.bottom = jumperBottomSpace + "px";
+      console.log("2", jumperBottomSpace);
+      console.log("s", startingPoint);
+      if (jumperBottomSpace > startingPoint + 200) {
+        fall();
+      }
     }, 30);
+  }
+
+  function moveLeft() {
+    if (isGoingRight) {
+      clearInterval(rightTimerId);
+      isGoingRight = false;
+    }
+    isGoingLeft = true;
+    leftTimerId = setInterval(function () {
+      if (jumperLeftSpace >= 0) {
+        console.log("going left");
+        jumperLeftSpace -= 5;
+        jumper.style.left = jumperLeftSpace + "px";
+      } else moveRight();
+    }, 20);
+  }
+
+  function moveRight() {
+    if (isGoingLeft) {
+      clearInterval(leftTimerId);
+      isGoingLeft = false;
+    }
+    isGoingRight = true;
+    rightTimerId = setInterval(function () {
+      if (jumperLeftSpace <= 313) {
+        console.log("going right");
+        jumperLeftSpace += 5;
+        jumper.style.left = jumperLeftSpace + "px";
+      } else moveLeft();
+    }, 20);
+  }
+
+  function moveStraight() {
+    isGoingRight = false;
+    isGoingLeft = false;
+    clearInterval(rightTimerId);
+    clearInterval(leftTimerId);
+  }
+
+  function control(e) {
+    jumper.style.bottom = jumperBottomSpace + "px";
+    if (e.key === "ArrowLeft") {
+      moveLeft();
+    } else if (e.key === "ArrowRight") {
+      moveRight();
+    } else if (e.key === "ArrowUp") {
+      moveStraight();
+    }
   }
 
   function gameOver() {
@@ -118,57 +174,12 @@ document.addEventListener("DOMContentLoaded", () => {
     clearInterval(rightTimerId);
   }
 
-  function control(e) {
-    if (e.key === "ArrowLeft") {
-      moveLeft();
-    } else if (e.key === "ArrowRight") {
-      moveRight();
-    } else if (e.key === "ArrowUp") {
-      moveStraight();
-    }
-  }
-
-  function moveLeft() {
-    if (isGoingRight) {
-      clearInterval(rightTimerId);
-      isGoingRight = false;
-    }
-    isGoingLeft = true;
-    leftTimerId = setInterval(function () {
-      if (jumperLeftSpace >= 0) {
-        jumperLeftSpace -= 5;
-        jumper.style.left = jumperLeftSpace + "px";
-      } else moveRight();
-    }, 20);
-  }
-
-  function moveRight() {
-    if (isGoingLeft) {
-      clearInterval(leftTimerId);
-      isGoingLeft = false;
-    }
-    isGoingRight = true;
-    rightTimerId = setInterval(function () {
-      if (jumperLeftSpace <= 340) {
-        jumperLeftSpace += 5;
-        jumper.style.left = jumperLeftSpace + "px";
-      } else moveLeft();
-    }, 20);
-  }
-
-  function moveStraight() {
-    isGoingRight = false;
-    isGoingLeft = false;
-    clearInterval(rightTimerId);
-    clearInterval(leftTimerId);
-  }
-
   function start() {
     if (isGameOver == false) {
       createPlatforms();
       createJumper();
       setInterval(movePlatforms, 30);
-      jump();
+      jump(startingPoint);
       document.addEventListener("keyup", control);
     }
   }
