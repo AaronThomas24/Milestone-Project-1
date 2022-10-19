@@ -2,13 +2,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const map = document.querySelector(".map");
   const jumper = document.createElement("div");
   let jumperLeftSpace = 50;
-  let jumperBottomSpace = 250;
+  let startingPoint = 150;
+  let jumperBottomSpace = startingPoint;
   let isGameOver = false;
   let platformCount = 5;
   let platforms = [];
   let upTimerId;
   let downTimerId;
   let isJumping = true;
+  let isGoingLeft = false;
+  let isGoingRight = false;
+  let leftTimerId;
+  let rightTimerId;
+  let score = 0;
 
   function createJumper() {
     map.appendChild(jumper);
@@ -31,11 +37,12 @@ document.addEventListener("DOMContentLoaded", () => {
       map.appendChild(visual);
     }
   }
+
   function createPlatforms() {
     for (let i = 0; i < platformCount; i++) {
-      let platformSpace = 600 / platformCount;
-      let newPlatformBottom = 100 + i * platformSpace;
-      let newPlatform = new Platform(newPlatformBottom);
+      let platGap = 600 / platformCount;
+      let newPlatBottom = 100 + i * platGap;
+      let newPlatform = new Platform(newPlatBottom);
       platforms.push(newPlatform);
       console.log(platforms);
     }
@@ -47,6 +54,16 @@ document.addEventListener("DOMContentLoaded", () => {
         platform.bottom -= 4;
         let visual = platform.visual;
         visual.style.bottom = platform.bottom + "px";
+
+        if (platform.bottom < 10) {
+          let firstPlatform = platforms[0].visual;
+          firstPlatform.classList.remove("platform");
+          platforms.shift();
+          console.log(platforms);
+          score++;
+          var newPlatform = new Platform(600);
+          platforms.push(newPlatform);
+        }
       });
     }
   }
@@ -57,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
     upTimerId = setInterval(function () {
       jumperBottomSpace += 20;
       jumper.style.bottom = jumperBottomSpace + "px";
-      if (jumperBottomSpace > 350) {
+      if (jumperBottomSpace > startingPoint + 200) {
         fall();
       }
     }, 30);
@@ -81,6 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
           !isJumping
         ) {
           console.log("landed");
+          startingPoint = jumperBottomSpace;
           jump();
         }
       });
@@ -88,20 +106,61 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function gameOver() {
-    console.log("game over");
     isGameOver = true;
+    while (map.firstChild) {
+      console.log("remove");
+      map.removeChild(map.firstChild);
+    }
+    map.innerHTML = score;
     clearInterval(upTimerId);
     clearInterval(downTimerId);
+    clearInterval(leftTimerId);
+    clearInterval(rightTimerId);
   }
 
   function control(e) {
     if (e.key === "ArrowLeft") {
-      // Move Jumper Left
+      moveLeft();
     } else if (e.key === "ArrowRight") {
-      //Move Jumper Right
+      moveRight();
     } else if (e.key === "ArrowUp") {
-      //moveStraight
+      moveStraight();
     }
+  }
+
+  function moveLeft() {
+    if (isGoingRight) {
+      clearInterval(rightTimerId);
+      isGoingRight = false;
+    }
+    isGoingLeft = true;
+    leftTimerId = setInterval(function () {
+      if (jumperLeftSpace >= 0) {
+        jumperLeftSpace -= 5;
+        jumper.style.left = jumperLeftSpace + "px";
+      } else moveRight();
+    }, 20);
+  }
+
+  function moveRight() {
+    if (isGoingLeft) {
+      clearInterval(leftTimerId);
+      isGoingLeft = false;
+    }
+    isGoingRight = true;
+    rightTimerId = setInterval(function () {
+      if (jumperLeftSpace <= 340) {
+        jumperLeftSpace += 5;
+        jumper.style.left = jumperLeftSpace + "px";
+      } else moveLeft();
+    }, 20);
+  }
+
+  function moveStraight() {
+    isGoingRight = false;
+    isGoingLeft = false;
+    clearInterval(rightTimerId);
+    clearInterval(leftTimerId);
   }
 
   function start() {
@@ -110,6 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
       createJumper();
       setInterval(movePlatforms, 30);
       jump();
+      document.addEventListener("keyup", control);
     }
   }
   start();
