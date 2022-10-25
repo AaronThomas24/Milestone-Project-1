@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Declaring my variables
   const map = document.querySelector(".map");
   const jumper = document.createElement("div");
   let isGameOver = false;
@@ -33,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  //Creating New Platforms
   function createPlatforms() {
     for (let i = 0; i < platformCount; i++) {
       let platGap = 600 / platformCount;
@@ -63,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  //Creating Jumper
   function createJumper() {
     map.appendChild(jumper);
     jumper.classList.add("jumper");
@@ -115,6 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 30);
   }
 
+  //Assigning movement for Jumper
   function moveLeft() {
     if (isGoingRight) {
       clearInterval(rightTimerId);
@@ -164,6 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  //Gameover function
   function gameOver() {
     isGameOver = true;
     while (map.firstChild) {
@@ -177,6 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
     clearInterval(rightTimerId);
   }
 
+  //Restarting game
   function start() {
     if (isGameOver == false) {
       createPlatforms();
