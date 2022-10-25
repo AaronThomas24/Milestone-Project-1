@@ -2,14 +2,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const map = document.querySelector(".map");
   const jumper = document.createElement("div");
   let isGameOver = false;
-  let speed = 5;
+  let speed = 3;
   let platformCount = 5;
   let platforms = [];
   let score = 0;
   let jumperLeftSpace = 50;
   let startingPoint = 150;
   let jumperBottomSpace = startingPoint;
-  const gravity = 0.9;
+  const gravity = 0.2;
+  const velocity = 0;
   let upTimerId;
   let downTimerId;
   let isJumping = true;
@@ -90,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
           console.log("landed");
           startingPoint = jumperBottomSpace;
           jump();
-          console.log("start", startPoint);
+          console.log("start", startingPoint);
           isJumping = true;
         }
       });
@@ -109,6 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("s", startingPoint);
       if (jumperBottomSpace > startingPoint + 200) {
         fall();
+        isJumping = false;
       }
     }, 30);
   }
@@ -144,12 +146,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function moveStraight() {
-    isGoingRight = false;
     isGoingLeft = false;
-    clearInterval(rightTimerId);
+    isGoingRight = false;
     clearInterval(leftTimerId);
+    clearInterval(rightTimerId);
   }
 
+  //Assigning movement to the key codes
   function control(e) {
     jumper.style.bottom = jumperBottomSpace + "px";
     if (e.key === "ArrowLeft") {
