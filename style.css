@@ -1,6 +1,6 @@
 .map {
-    width: 800px;
-    height: 800px;
+    width: 700px;
+    height: 700px;
     background-image: url(images/background.png);
     position: relative;
     font-size: 100px;
@@ -14,11 +14,22 @@
     position: absolute;
     background-size:cover;
     mix-blend-mode: multiply;
+    
 } 
 
 .platform {
     width: 85px;
     height: 15px;
-    background-color: blue;
+    background-color: green;
     position: absolute;
+    
+}
+
+h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 45px;
+    background-color: green;
+    color: black;
+    font-weight: bold;
+    text-align: center;
 }

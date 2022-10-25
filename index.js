@@ -2,14 +2,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const map = document.querySelector(".map");
   const jumper = document.createElement("div");
   let isGameOver = false;
-  let speed = 3;
+  let speed = 5;
   let platformCount = 5;
   let platforms = [];
   let score = 0;
   let jumperLeftSpace = 50;
   let startingPoint = 150;
   let jumperBottomSpace = startingPoint;
-  const gravity = 0.2;
+  const gravity = 0.9;
   const velocity = 0;
   let upTimerId;
   let downTimerId;
