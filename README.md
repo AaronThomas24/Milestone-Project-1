@@ -1,1 +1,1 @@
-For my milestone project I will be doing a mock of the classic arcade game Pacman. Pacman has been a popular game for decades and is a big part of my childhood. I am interested in making my own version of a classic.
+For my milestone project I will be doing a mock of the game Doodle Jump. Doodle jump has been a popular game for years now, and a game that I have been playing ever since I got my first iphone. Doodle Jump was a great past time of mine, and I am interested in making my own version of it.
