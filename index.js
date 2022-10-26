@@ -3,7 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const map = document.querySelector(".map");
   const jumper = document.createElement("div");
   let isGameOver = false;
-  let speed = 5;
+  let speed = 8;
+  let velocity = 0;
   let platformCount = 5;
   let platforms = [];
   let score = 0;
@@ -11,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let startingPoint = 150;
   let jumperBottomSpace = startingPoint;
   const gravity = 0.9;
-  const velocity = 0;
   let upTimerId;
   let downTimerId;
   let isJumping = true;
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  //Creating Jumper
+  //Creating the Jumper Character
   function createJumper() {
     map.appendChild(jumper);
     jumper.classList.add("jumper");
@@ -101,6 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 20);
   }
 
+  //Allowing jumper to jump off each platform
   function jump() {
     clearInterval(downTimerId);
     isJumping = true;
@@ -141,7 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     isGoingRight = true;
     rightTimerId = setInterval(function () {
-      if (jumperLeftSpace <= 313) {
+      if (jumperLeftSpace <= 625) {
         console.log("going right");
         jumperLeftSpace += 5;
         jumper.style.left = jumperLeftSpace + "px";
@@ -156,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
     clearInterval(rightTimerId);
   }
 
-  //Assigning movement to the key codes
+  //Assigning movement of the jumper to the key codes
   function control(e) {
     jumper.style.bottom = jumperBottomSpace + "px";
     if (e.key === "ArrowLeft") {
@@ -168,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  //Gameover function
+  //Gameover function, showing final score
   function gameOver() {
     isGameOver = true;
     while (map.firstChild) {
