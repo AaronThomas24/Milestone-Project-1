@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
     rightTimerId = setInterval(function () {
       if (jumperLeftSpace <= 625) {
         console.log("going right");
-        jumperLeftSpace += 8;
+        jumperLeftSpace += 5;
         jumper.style.left = jumperLeftSpace + "px";
       } else moveLeft();
     }, 20);
