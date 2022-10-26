@@ -5,8 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let isGameOver = false;
   let speed = 8;
   let velocity = 0;
-  let platformCount = 5;
-  let platforms = [];
+  let tileCount = 5;
+  let tiles = [];
   let score = 0;
   let jumperLeftSpace = 50;
   let startingPoint = 150;
@@ -20,14 +20,14 @@ document.addEventListener("DOMContentLoaded", () => {
   let leftTimerId;
   let rightTimerId;
 
-  class Platform {
-    constructor(newPlatformBottom) {
+  class Tile {
+    constructor(newTileBottom) {
       this.left = Math.random() * 315;
-      this.bottom = newPlatformBottom;
+      this.bottom = newTileBottom;
       this.visual = document.createElement("div");
 
       const visual = this.visual;
-      visual.classList.add("platform");
+      visual.classList.add("tile");
       visual.style.left = this.left + "px";
       visual.style.bottom = this.bottom + "px";
       map.appendChild(visual);
@@ -35,31 +35,31 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   //Creating New Platforms
-  function createPlatforms() {
-    for (let i = 0; i < platformCount; i++) {
-      let platGap = 600 / platformCount;
-      let newPlatBottom = 100 + i * platGap;
-      let newPlatform = new Platform(newPlatBottom);
-      platforms.push(newPlatform);
-      console.log(platforms);
+  function createTiles() {
+    for (let i = 0; i < tileCount; i++) {
+      let tileGap = 600 / tileCount;
+      let newTileBottom = 100 + i * tileGap;
+      let newTile = new Tile(newTileBottom);
+      tiles.push(newTile);
+      console.log(tiles);
     }
   }
 
-  function movePlatforms() {
+  function moveTiles() {
     if (jumperBottomSpace > 200) {
-      platforms.forEach((platform) => {
-        platform.bottom -= 4;
-        let visual = platform.visual;
-        visual.style.bottom = platform.bottom + "px";
+      tiles.forEach((tile) => {
+        tile.bottom -= 4;
+        let visual = tile.visual;
+        visual.style.bottom = tile.bottom + "px";
 
-        if (platform.bottom < 10) {
-          let firstPlatform = platforms[0].visual;
-          firstPlatform.classList.remove("platform");
-          platforms.shift();
-          console.log(platforms);
+        if (tile.bottom < 10) {
+          let firstTile = tiles[0].visual;
+          firstTile.classList.remove("tile");
+          tiles.shift();
+          console.log(tiles);
           score++;
-          var newPlatform = new Platform(600);
-          platforms.push(newPlatform);
+          var newTile = new Tile(600);
+          tiles.push(newTile);
         }
       });
     }
@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function createJumper() {
     map.appendChild(jumper);
     jumper.classList.add("jumper");
-    jumperLeftSpace = platforms[0].left;
+    jumperLeftSpace = tiles[0].left;
     jumper.style.left = jumperLeftSpace + "px";
     jumper.style.bottom = jumperBottomSpace + "px";
   }
@@ -83,12 +83,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (jumperBottomSpace <= 0) {
         gameOver();
       }
-      platforms.forEach((platform) => {
+      tiles.forEach((tile) => {
         if (
-          jumperBottomSpace >= platform.bottom &&
-          jumperBottomSpace <= platform.bottom + 15 &&
-          jumperLeftSpace + 60 >= platform.left &&
-          jumperLeftSpace <= platform.left + 85 &&
+          jumperBottomSpace >= tile.bottom &&
+          jumperBottomSpace <= tile.bottom + 15 &&
+          jumperLeftSpace + 60 >= tile.left &&
+          jumperLeftSpace <= tile.left + 85 &&
           !isJumping
         ) {
           console.log("landed");
@@ -186,9 +186,9 @@ document.addEventListener("DOMContentLoaded", () => {
   //Restarting game
   function start() {
     if (isGameOver == false) {
-      createPlatforms();
+      createTiles();
       createJumper();
-      setInterval(movePlatforms, 30);
+      setInterval(moveTiles, 30);
       jump(startingPoint);
       document.addEventListener("keyup", control);
     }
