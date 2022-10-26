@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  //Creating New Platforms
+  //Creating New Tiles
   function createTiles() {
     for (let i = 0; i < tileCount; i++) {
       let tileGap = 600 / tileCount;
@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 20);
   }
 
-  //Allowing jumper to jump off each platform
+  //Allowing jumper to jump off each tile
   function jump() {
     clearInterval(downTimerId);
     isJumping = true;
